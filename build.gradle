@@ -1,0 +1,102 @@
+group 'seek'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+
+}
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+ext {
+    springVersion = '4.3.3.RELEASE'
+    junitVersion = '4.12'
+    mysqlConnectorVersion = "5.1.26"
+    freemarkerVersion = "2.3.20"
+    slf4jVersion = '1.7.5'
+    springfoxVersion = '2.5.0'
+    jettyVersion = '6.1.26'
+    myBatisVersion = '3.4.1'
+    googleGuava = '19.0'
+
+
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: "$junitVersion"
+
+
+}
+
+
+configurations {
+    provided
+    compile.extendsFrom provided
+
+    all*.exclude group: 'org.springframework', module: 'spring'
+    all*.exclude group: 'asm', module: 'asm'
+    all*.exclude group: 'com.easypoi', module: 'easypoi-base'
+    all*.exclude group: 'com.easypoi', module: 'easypoi-web'
+    //排除log4j桥接，只允许使用logback
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
+configure(subprojects.findAll { it.name.contains('-service') }) {
+    task createServiceProject(dependsOn: 'createJavaProject') << {
+        /** 配置生成 */
+        file("src/main/resources/config").mkdirs()
+    }
+
+}
+
+configure(subprojects.findAll { it.name.contains('war') }) {
+    apply plugin: 'war'
+
+    task createWebProject(dependsOn: 'createJavaProject') << {
+        def webAppDir = file("$webAppDirName")
+        webAppDir.mkdirs()
+        file("src/main/resources/config").mkdirs()
+    }
+
+}
+
+//删除父目录下的test，避免test task执行失败
+delete "${buildDir}/classes/test"
+
+//拷贝根目录下的所有test到各自子module下
+task "copytest" << {
+    def fromPath
+    def toPath
+    subprojects.each {
+        fromPath = "${project.buildDir}/classes/test/${it.name}"
+        toPath = "${it.buildDir}/classes/test"
+        copy {
+            from fromPath
+            into toPath
+        }
+
+    }
+}
+
+task createREADME() {
+    file("README.md").createNewFile()
+}
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+task downloadJars(type: Copy) {
+    from configurations.runtime
+    into 'libs' // 目标位置
+}

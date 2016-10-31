@@ -1,0 +1,19 @@
+group 'seek'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: "$junitVersion"
+    compile group: 'org.mybatis', name: 'mybatis', version: "$myBatisVersion"
+    compile group: 'org.springframework', name: 'spring-jdbc', version: "$springVersion"
+    compile "org.mybatis:mybatis-spring:1.3.0"
+    compile 'mysql:mysql-connector-java:5.1.31'
+
+}

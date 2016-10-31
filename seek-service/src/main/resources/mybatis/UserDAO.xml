@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seek.soft.dao.IUserDAO">
+    <!--
+    insert
+    update
+    updateNull
+    deleteById
+    deleteByCondition
+    deleteByProperty
+    fetch
+    findOne
+    findList
+    findAll
+    queryPage
+    like
+    queryList
+    queryOne
+    count
+    selectMaxId
+    updateOrSave
+    selectOne
+    selectList
+    -->
+    <sql id="Base_Column_List">
+        id,
+        ucUserId,
+        schoolId,
+        schoolName,
+        location,
+        address,
+        masterName,
+        phone,
+        createDate,
+        creator,
+        lastModifier,
+        lastModDate,
+        status,
+        mqMsgId,
+        mac,
+        isActivated
+    </sql>
+
+</mapper>
+

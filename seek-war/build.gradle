@@ -1,0 +1,72 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+repositories {
+    jcenter()
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+configurations.all {
+    exclude group: "commons-logging", module: "commons-logging"
+}
+
+dependencies {
+
+    compile project(':seek-service')
+
+    testCompile group: 'junit', name: 'junit', version: "$junitVersion"
+    testCompile "org.mortbay.jetty:jetty:$jettyVersion"
+
+    compile("org.freemarker:freemarker:$freemarkerVersion")
+    compile("javax.servlet:javax.servlet-api:3.1.0")
+    compile("org.springframework:spring-core:$springVersion")
+    compile("org.springframework:spring-web:$springVersion")
+    compile("org.springframework:spring-webmvc:$springVersion")
+    compile "org.springframework:spring-beans:$springVersion"
+    compile "com.squareup.okhttp:okhttp:2.7.3"
+    compile "com.alibaba:fastjson:1.2.15"
+    compile group: 'org.logback-extensions', name: 'logback-ext-spring', version: '0.1.4'
+    compile 'org.slf4j:jcl-over-slf4j:1.7.12'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-collections:commons-collections:3.2.1'
+    //<!--分页插件-->
+    compile group: 'com.github.pagehelper', name: 'pagehelper', version: '4.1.6'
+    compile group: 'com.github.jsqlparser', name: 'jsqlparser', version: '0.9.5'
+
+    //swagger
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version: "$springfoxVersion") {
+        exclude group: "org.slf4j"
+    }
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: "$springfoxVersion"
+    compile group: 'io.springfox', name: 'springfox-spring-web', version: "$springfoxVersion"
+    compile group: 'io.swagger', name: 'swagger-models', version: '1.5.9'
+    compile(group: 'io.springfox', name: 'springfox-staticdocs', version: "$springfoxVersion") {
+        exclude group: "org.slf4j"
+        exclude group: "joda-time"
+
+    }
+
+    compile 'joda-time:joda-time:2.9.4'
+    //一个工具类
+    compile 'com.xiaoleilu:hutool:2.15.5'
+}
+
+
+task createREADME() {
+    file("README.md").createNewFile()
+}
+
+//jetty 插件的的配置
+httpPort = 8090
+
+jettyRun {
+    contextPath = 'seek'
+    reload = 'automatic'
+    scanIntervalSeconds = 10
+}
