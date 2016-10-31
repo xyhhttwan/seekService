@@ -1,2 +1,2 @@
 # seekService
-springmvc的实现
+springmvc + mybatis +gradle +swagger
